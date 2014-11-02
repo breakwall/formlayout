@@ -1,10 +1,21 @@
 package ez.layout.formlayout;
 
 import java.awt.Component;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class FormLayoutHelper {
 
@@ -32,18 +43,19 @@ public class FormLayoutHelper {
 	private Component lastComponent = null;
 
 	public void addComponent(Component component, int vertical, int horizental) {
-		if ((vertical != TOP && vertical != BOTTOM) || (horizental != LEFT && horizental != RIGHT)) {
+		if ((vertical != TOP && vertical != BOTTOM)
+				|| (horizental != LEFT && horizental != RIGHT)) {
 			throw new IllegalArgumentException(
 					"The argument vertical must be TOP or BOTTOM, horizental must be LEFT or RIGHT!");
 		}
-		
+
 		FormData fd = new FormData();
 		if (vertical == TOP) {
-			fd.top = new FormAttachment(0, margin);	
+			fd.top = new FormAttachment(0, margin);
 		} else {
 			fd.bottom = new FormAttachment(100, -margin);
 		}
-		
+
 		if (horizental == LEFT) {
 			fd.left = new FormAttachment(0, margin);
 		} else {
@@ -59,9 +71,12 @@ public class FormLayoutHelper {
 	}
 
 	/**
-	 * @param component component to added
-	 * @param dComponent related component
-	 * @param position relative position
+	 * @param component
+	 *            component to added
+	 * @param dComponent
+	 *            related component
+	 * @param position
+	 *            relative position
 	 */
 	public void addComponent(Component component, Component dComponent,
 			int position) {
@@ -72,7 +87,7 @@ public class FormLayoutHelper {
 
 		FormData dComponentFd = components.get(dComponent);
 		FormData fd = new FormData();
-		
+
 		FormAttachment fa1 = new FormAttachment(dComponent, margin);
 		switch (position) {
 		case LEFT:
@@ -89,7 +104,7 @@ public class FormLayoutHelper {
 			fd.top = fa1;
 			break;
 		}
-		
+
 		if (fd.top == null && fd.bottom == null) {
 			if (dComponentFd.top != null) {
 				fd.top = dComponentFd.top;
@@ -103,15 +118,16 @@ public class FormLayoutHelper {
 				fd.right = dComponentFd.right;
 			}
 		}
-		
+
 		addComponent(component, fd);
 	}
-	
+
 	public void addComponent(Component component, int position) {
 		if (lastComponent == null) {
-			throw new IllegalArgumentException("No related component, you should add a component to list fist");
+			throw new IllegalArgumentException(
+					"No related component, you should add a component to list fist");
 		}
-		
+
 		addComponent(component, lastComponent, position);
 	}
 
@@ -120,8 +136,53 @@ public class FormLayoutHelper {
 			panel.add(entry.getKey(), entry.getValue());
 		}
 	}
-	
+
 	public static FormLayoutHelper readFromFile(String fileName) {
+		Map<String, FormLayoutHelper> map = new HashMap<>();
+		try {
+			File file = new File(fileName);
+			FileInputStream fis = new FileInputStream(file);
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document document = builder.parse(fis);
+
+			Element element = document.getDocumentElement();
+			NodeList panels = element.getElementsByTagName("panel");
+			for (int i = 0; i < panels.getLength(); i++) {
+				Element ele = (Element) panels.item(i);
+				System.out.println(ele.getAttribute("id"));
+				System.out.println(ele.getAttribute("margin"));
+				NodeList components = ele.getElementsByTagName("component");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return null;
+	}
+
+	private static FormLayoutHelper getHelper(Element element) {
+		String margin = element.getAttribute("margin");
+		// check id
+
+		int marginInt = Integer.parseInt(margin);
+		FormLayoutHelper helper = new FormLayoutHelper(marginInt);
+
+		NodeList components = element.getElementsByTagName("component");
+		for (int i = 0; i < components.getLength(); i++) {
+			Element componentElement = (Element) components.item(i);
+			componentElement.getAttribute("id");
+			String type = componentElement.getAttribute("type");
+			switch (type) {
+			case "JButton":
+				JButton button = new JButton();
+				break;
+			default:
+				break;
+			}
+		}
+
+		return helper;
 	}
 }
