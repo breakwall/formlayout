@@ -120,4 +120,8 @@ public class FormLayoutHelper {
 			panel.add(entry.getKey(), entry.getValue());
 		}
 	}
+	
+	public static FormLayoutHelper readFromFile(String fileName) {
+		return null;
+	}
 }
