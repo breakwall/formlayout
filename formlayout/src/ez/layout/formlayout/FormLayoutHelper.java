@@ -19,170 +19,222 @@ import org.w3c.dom.NodeList;
 
 public class FormLayoutHelper {
 
-	public static final int LEFT = 1;
+    public static final int LEFT = 1;
 
-	public static final int TOP = 2;
+    public static final int TOP = 2;
 
-	public static final int RIGHT = 3;
+    public static final int RIGHT = 3;
 
-	public static final int BOTTOM = 4;
+    public static final int BOTTOM = 4;
 
-	public static final int DEFAULT_MARGIN = 10;
+    public static final int DEFAULT_MARGIN = 10;
 
-	private final int margin;
+    private final int margin;
 
-	public FormLayoutHelper() {
-		this(DEFAULT_MARGIN);
-	}
+    public FormLayoutHelper() {
+        this(DEFAULT_MARGIN);
+    }
 
-	public FormLayoutHelper(int margin) {
-		this.margin = margin;
-	}
+    public FormLayoutHelper(int margin) {
+        this.margin = margin;
+    }
 
-	private LinkedHashMap<Component, FormData> components = new LinkedHashMap<Component, FormData>();
-	private Component lastComponent = null;
+    private LinkedHashMap<Component, FormData> components = new LinkedHashMap<Component, FormData>();
+    private Component lastComponent = null;
 
-	public void addComponent(Component component, int vertical, int horizental) {
-		if ((vertical != TOP && vertical != BOTTOM)
-				|| (horizental != LEFT && horizental != RIGHT)) {
-			throw new IllegalArgumentException(
-					"The argument vertical must be TOP or BOTTOM, horizental must be LEFT or RIGHT!");
-		}
+    public void addComponent(Component component, int vertical, int horizental) {
+        if ((vertical != TOP && vertical != BOTTOM)
+                || (horizental != LEFT && horizental != RIGHT)) {
+            throw new IllegalArgumentException(
+                    "The argument vertical must be TOP or BOTTOM, horizental must be LEFT or RIGHT!");
+        }
 
-		FormData fd = new FormData();
-		if (vertical == TOP) {
-			fd.top = new FormAttachment(0, margin);
-		} else {
-			fd.bottom = new FormAttachment(100, -margin);
-		}
+        Object leftData = null;
+        Object rightData = null;
+        Object topData = null;
+        Object bottomData = null;
 
-		if (horizental == LEFT) {
-			fd.left = new FormAttachment(0, margin);
-		} else {
-			fd.right = new FormAttachment(100, -margin);
-		}
+        if (vertical == TOP) {
+            topData = TOP;
+        } else {
+            bottomData = BOTTOM;
+        }
 
-		addComponent(component, fd);
-	}
+        if (horizental == LEFT) {
+            leftData = LEFT;
+        } else {
+            rightData = RIGHT;
+        }
 
-	public void addComponent(Component component, FormData fd) {
-		components.put(component, fd);
-		lastComponent = component;
-	}
+        addComponent(component, topData, bottomData, leftData, rightData);
+    }
 
-	/**
-	 * @param component
-	 *            component to added
-	 * @param dComponent
-	 *            related component
-	 * @param position
-	 *            relative position
-	 */
-	public void addComponent(Component component, Component dComponent,
-			int position) {
-		if (!components.containsKey(dComponent)) {
-			throw new IllegalArgumentException(
-					"The given dComponent has never been added before!");
-		}
+    public void addComponent(Component component, FormData fd) {
+        components.put(component, fd);
+        lastComponent = component;
+//        System.out.println(fd);
+    }
 
-		FormData dComponentFd = components.get(dComponent);
-		FormData fd = new FormData();
+    /**
+     * @param component
+     *            component to added
+     * @param dComponent
+     *            related component
+     * @param position
+     *            relative position
+     */
+    public void addComponent(Component component, Component dComponent,
+            int position) {
+        if (!components.containsKey(dComponent)) {
+            throw new IllegalArgumentException(
+                    "The given dComponent has never been added before!");
+        }
 
-		FormAttachment fa1 = new FormAttachment(dComponent, margin);
-		switch (position) {
-		case LEFT:
-			fd.right = fa1;
-			break;
-		case RIGHT:
-			fd.left = fa1;
-			break;
-		case TOP:
-			fd.bottom = fa1;
-			break;
-		case BOTTOM:
-		default:
-			fd.top = fa1;
-			break;
-		}
+        Object leftData = null;
+        Object rightData = null;
+        Object topData = null;
+        Object bottomData = null;
 
-		if (fd.top == null && fd.bottom == null) {
-			if (dComponentFd.top != null) {
-				fd.top = dComponentFd.top;
-			} else {
-				fd.bottom = dComponentFd.bottom;
-			}
-		} else if (fd.left == null && fd.right == null) {
-			if (dComponentFd.left != null) {
-				fd.left = dComponentFd.left;
-			} else {
-				fd.right = dComponentFd.right;
-			}
-		}
+        switch (position) {
+        case LEFT:
+            leftData = dComponent;
+            break;
+        case RIGHT:
+            rightData = dComponent;
+            break;
+        case TOP:
+            topData = dComponent;
+            break;
+        case BOTTOM:
+        default:
+            bottomData = dComponent;
+            break;
+        }
 
-		addComponent(component, fd);
-	}
+        addComponent(component, topData, bottomData, leftData, rightData);
+    }
 
-	public void addComponent(Component component, int position) {
-		if (lastComponent == null) {
-			throw new IllegalArgumentException(
-					"No related component, you should add a component to list fist");
-		}
+    public void addComponent(Component component, Object topData,  Object bottomData,  Object leftData,  Object rightData) {
+//        if ((topData == null && bottomData == null) || (leftData == null && rightData == null)) {
+//            throw new IllegalArgumentException("layout data is invalid.");
+//        }
 
-		addComponent(component, lastComponent, position);
-	}
+        FormData fd = new FormData();
 
-	public void addSubToParent(JPanel panel) {
-		for (Entry<Component, FormData> entry : components.entrySet()) {
-			panel.add(entry.getKey(), entry.getValue());
-		}
-	}
+        if (topData != null) {
+            if (topData.equals(TOP)) {
+                fd.top = new FormAttachment(0, margin);
+            } else if ((topData instanceof Component) && components.containsKey(topData)) {
+                fd.top = new FormAttachment((Component)topData, margin);
+            } else if (topData instanceof FormAttachment) {
+                fd.top = (FormAttachment)topData;
+            }
+        }
 
-	public static FormLayoutHelper readFromFile(String fileName) {
-		Map<String, FormLayoutHelper> map = new HashMap<>();
-		try {
-			File file = new File(fileName);
-			FileInputStream fis = new FileInputStream(file);
-			DocumentBuilderFactory factory = DocumentBuilderFactory
-					.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder.parse(fis);
+        if (bottomData != null) {
+            if (bottomData.equals(BOTTOM)) {
+                fd.bottom = new FormAttachment(100, -margin);
+            } else if ((bottomData instanceof Component) && components.containsKey(bottomData)) {
+                fd.bottom = new FormAttachment((Component)bottomData, -margin);
+            } else if (bottomData instanceof FormAttachment) {
+                fd.bottom = (FormAttachment)bottomData;
+            }
+        }
 
-			Element element = document.getDocumentElement();
-			NodeList panels = element.getElementsByTagName("panel");
-			for (int i = 0; i < panels.getLength(); i++) {
-				Element ele = (Element) panels.item(i);
-				System.out.println(ele.getAttribute("id"));
-				System.out.println(ele.getAttribute("margin"));
-				NodeList components = ele.getElementsByTagName("component");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        if (leftData != null) {
+            if (leftData.equals(LEFT)) {
+                fd.left = new FormAttachment(0, margin);
+            } else if ((leftData instanceof Component) && components.containsKey(leftData)) {
+                fd.left = new FormAttachment((Component)leftData, margin);
+            } else if (leftData instanceof FormAttachment) {
+                fd.left = (FormAttachment)leftData;
+            }
+        }
 
-		return null;
-	}
+        if (rightData != null) {
+            if (rightData.equals(RIGHT)) {
+                fd.right = new FormAttachment(100, -margin);
+            } else if ((rightData instanceof Component) && components.containsKey(rightData)) {
+                fd.right = new FormAttachment((Component)rightData, -margin);
+            } else if (rightData instanceof FormAttachment) {
+                fd.right = (FormAttachment)rightData;
+            }
+        }
 
-	private static FormLayoutHelper getHelper(Element element) {
-		String margin = element.getAttribute("margin");
-		// check id
+        if (fd.top == null && fd.bottom == null) {
+            Component relatedComponent = null;
+            if (fd.left != null && fd.left.component != null) {
+                relatedComponent =  fd.left.component;
+            } else if (fd.right != null && fd.right.component != null) {
+                relatedComponent =  fd.right.component;
+            }
 
-		int marginInt = Integer.parseInt(margin);
-		FormLayoutHelper helper = new FormLayoutHelper(marginInt);
+            if (relatedComponent != null) {
+                FormData relatedFd = components.get(relatedComponent);
+                if (relatedFd.top != null) {
+                    fd.top = relatedFd.top;
+                } else if (relatedFd.bottom != null) {
+                    fd.bottom = relatedFd.bottom;
+                }
+            }
+        } else if (fd.left == null && fd.right == null) {
+            Component relatedComponent = null;
+            if (fd.top != null && fd.top.component != null) {
+                relatedComponent =  fd.top.component;
+            } else if (fd.bottom != null && fd.bottom.component != null) {
+                relatedComponent =  fd.bottom.component;
+            }
 
-		NodeList components = element.getElementsByTagName("component");
-		for (int i = 0; i < components.getLength(); i++) {
-			Element componentElement = (Element) components.item(i);
-			componentElement.getAttribute("id");
-			String type = componentElement.getAttribute("type");
-			switch (type) {
-			case "JButton":
-				JButton button = new JButton();
-				break;
-			default:
-				break;
-			}
-		}
+            if (relatedComponent != null) {
+                FormData relatedFd = components.get(relatedComponent);
+                if (relatedFd.left != null) {
+                    fd.left = relatedFd.left;
+                } else if (relatedFd.right != null) {
+                    fd.right = relatedFd.right;
+                }
+            }
+        }
 
-		return helper;
-	}
+        addComponent(component, fd);
+    }
+
+    public void addComponent(Component component, int position) {
+        if (lastComponent == null) {
+            throw new IllegalArgumentException(
+                    "No related component, you should add a component to list fist");
+        }
+
+        addComponent(component, lastComponent, position);
+    }
+
+    public void fillPanel(JPanel panel) {
+        for (Entry<Component, FormData> entry : components.entrySet()) {
+            panel.add(entry.getKey(), entry.getValue());
+        }
+    }
+
+    public static Map<String, XMLLayout> readFromFile(String fileName) {
+        Map<String, XMLLayout> map = new HashMap<>();
+        try {
+            File file = new File(fileName);
+            FileInputStream fis = new FileInputStream(file);
+            DocumentBuilderFactory factory = DocumentBuilderFactory
+                    .newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(fis);
+
+            Element element = document.getDocumentElement();
+            NodeList panels = element.getElementsByTagName("panel");
+            for (int i = 0; i < panels.getLength(); i++) {
+                Element ele = (Element) panels.item(i);
+                XMLLayout panel = new XMLLayout();
+                panel.parseElement(ele);
+                map.put(panel.getId(), panel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
 }

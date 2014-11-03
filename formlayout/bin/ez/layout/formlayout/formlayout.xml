@@ -1,8 +1,0 @@
-<xml>
-  <panel id="panel" margin="10">
-    <component id="topLeft" type="JButton" layoutdata="top:left"/>
-    <component id="topLeftBottom" type="JButton" layoutdata="topLeft bottom"/>
-    <component id="topLeftBottomRight" type="JButton" layoutdata="topLeftBottom right"/>
-    <component id="top right" type="JButton" layoutdata="top:right"/>
-  </panel>
-</xml>

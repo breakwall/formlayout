@@ -18,12 +18,12 @@ public class FormData {
     public FormAttachment right;
     public FormAttachment top;
     public FormAttachment bottom;
-    
+
     public FormAttachment cachedLeft, cachedRight, cachedTop, cachedBottom;
-    
+
     public int width;
     public int height;
-    
+
     public FormAttachment getLeftAttachment(FormLayout formLayout, Component component) {
         if (cachedLeft != null) return cachedLeft;
         if (left == null) {
@@ -37,14 +37,14 @@ public class FormData {
         if (leftComponent != null && leftComponent.getParent() != component.getParent()) {
             leftComponent = null;
         }
-        
+
         if (leftComponent == null) {
             return cachedLeft = left;
         }
 
         FormData leftData = (FormData) formLayout.getFormData(leftComponent);
         FormAttachment rightAttachment = leftData.getRightAttachment (formLayout, leftComponent);
-        return cachedLeft = rightAttachment.plus (left.offset); 
+        return cachedLeft = rightAttachment.plus (left.offset);
     }
 
     public FormAttachment getRightAttachment(FormLayout formLayout, Component component) {
@@ -56,15 +56,15 @@ public class FormData {
                 return cachedRight = getLeftAttachment (formLayout, component).plus (getWidth (component));
             }
         }
-        
+
         Component rightComponent = right.component;
-	if (rightComponent != null && rightComponent.getParent () != component.getParent ()) {
+    if (rightComponent != null && rightComponent.getParent () != component.getParent ()) {
             rightComponent = null;
-	}
-	if (rightComponent == null) {
+    }
+    if (rightComponent == null) {
             return cachedRight = right;
         }
-        
+
         FormData rightData = (FormData) formLayout.getFormData (rightComponent);
         FormAttachment leftAttachment = rightData.getLeftAttachment (formLayout, rightComponent);
         return cachedRight = leftAttachment.plus (right.offset);
@@ -79,47 +79,47 @@ public class FormData {
                 return cachedTop = getBottomAttachment(formLayout, component).minus(getHeight(component));
             }
         }
-	Component topComponent = top.component;
-	if (topComponent != null && topComponent.getParent () != component.getParent ()) {
+    Component topComponent = top.component;
+    if (topComponent != null && topComponent.getParent () != component.getParent ()) {
             topComponent = null;
-	}
-	if (topComponent == null) {
+    }
+    if (topComponent == null) {
             return cachedTop = top;
         }
-	FormData topData = (FormData) formLayout.getFormData(topComponent);
-	FormAttachment bottomAttachment = topData.getBottomAttachment (formLayout, topComponent);
-	return cachedTop = bottomAttachment.plus (top.offset);
+    FormData topData = (FormData) formLayout.getFormData(topComponent);
+    FormAttachment bottomAttachment = topData.getBottomAttachment (formLayout, topComponent);
+    return cachedTop = bottomAttachment.plus (top.offset);
     }
 
     public FormAttachment getBottomAttachment(FormLayout formLayout, Component component) {
         if (cachedBottom != null) return cachedBottom;
-	if (bottom == null) {
-		if (top == null) {
+    if (bottom == null) {
+        if (top == null) {
                     return cachedBottom = new FormAttachment (0, getHeight (component));
                 } else {
                     return cachedBottom = getTopAttachment (formLayout, component).plus (getHeight (component));
                 }
-	}
-	Component bottomComponent = bottom.component;
-	if (bottomComponent != null && bottomComponent.getParent () != component.getParent ()) {
+    }
+    Component bottomComponent = bottom.component;
+    if (bottomComponent != null && bottomComponent.getParent () != component.getParent ()) {
             bottomComponent = null;
-	}
-	if (bottomComponent == null) {
+    }
+    if (bottomComponent == null) {
             return cachedBottom = bottom;
         }
-	FormData bottomData = (FormData) formLayout.getFormData(bottomComponent);
-	FormAttachment topAttachment = bottomData.getTopAttachment (formLayout, bottomComponent);
+    FormData bottomData = (FormData) formLayout.getFormData(bottomComponent);
+    FormAttachment topAttachment = bottomData.getTopAttachment (formLayout, bottomComponent);
         return cachedBottom = topAttachment.plus (bottom.offset);
     }
-    
+
     int getWidth (Component component) {
         return component.getPreferredSize().width;
     }
-    
+
     int getHeight (Component component) {
         return component.getPreferredSize().height;
     }
-    
+
     public void flushCache() {
         cachedLeft = cachedRight = cachedTop = cachedBottom = null;
     }
@@ -128,7 +128,7 @@ public class FormData {
         FormAttachment rightF = getRightAttachment(formLayout, component);
         FormAttachment topF = getTopAttachment(formLayout, component);
         FormAttachment bottomF = getBottomAttachment(formLayout, component);
-        
+
         int miniWidth;
         int yy = getWidth(component);
         // xx => minimum layout width,yy component width
@@ -148,7 +148,7 @@ public class FormData {
             miniWidth = (yy - rightF.offset + leftF.numerator) * FormAttachment.denominator
                     / (rightF.numerator - leftF.numerator);
         }
-        
+
         int miniHeight;
         yy = getHeight(component);
         if (bottomF.numerator == topF.numerator) {
@@ -162,9 +162,17 @@ public class FormData {
                 miniHeight = Math.max(-topF.offset * denominator / topF.numerator, bottomF.offset * denominator / (denominator - topF.numerator));
             }
         } else {
-            miniHeight = (yy - bottomF.offset + topF.numerator) 
+            miniHeight = (yy - bottomF.offset + topF.numerator)
                     / (bottomF.numerator - topF.numerator);
         }
         return new Dimension(miniWidth, miniHeight);
     }
+
+    @Override
+    public String toString() {
+        return "FormData [left=" + left + ", right=" + right + ", top=" + top
+                + ", bottom=" + bottom + "]";
+    }
+
+
 }

@@ -81,18 +81,18 @@ public final class FormLayout implements LayoutManager2 {
                 final FormAttachment top = formData.getTopAttachment(this, comp);
                 final FormAttachment bottom = formData.getBottomAttachment(this, comp);
 
-                final int x = left.solveX(w);     // 左边的x坐标
-                final int y = top.solveX(h);     // 上边的y坐标
+                final int x = left.solveX(w);     // x coordinate of left
+                final int y = top.solveX(h);     // y coordinate of top
 
                 final int width;
                 final int height;
-                final int x2 = right.solveX(w);          // 右边的x坐标
-                final int y2 = bottom.solveX(h);   // 下边的y坐标
+                final int x2 = right.solveX(w);          // x coordinate of right
+                final int y2 = bottom.solveX(h);   // y coordinate of bottom
                 width = x2 - x;
                 height = y2 - y;
-                System.out.println(comp.getClass().getName() + ":(" + x + "," + y + "),(" + x2 + "," + y2 + ")");
-                System.out.println(width + ":"+ height);
-                System.out.println(w + ":" + h);
+//                System.out.println(comp.getClass().getName() + ":(" + x + "," + y + "),(" + x2 + "," + y2 + ")");
+//                System.out.println(width + ":"+ height);
+//                System.out.println(w + ":" + h);
                 comp.setBounds(x, y, width, height);
             }
         }
@@ -112,7 +112,7 @@ public final class FormLayout implements LayoutManager2 {
             Dimension d = fd.getMinimumSize(this, c);
             if (width < d.width) {
                 width = d.width;
-            } 
+            }
             if (height < d.height) {
                 height = d.height;
             }

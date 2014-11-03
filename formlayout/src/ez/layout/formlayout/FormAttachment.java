@@ -17,7 +17,7 @@ public final class FormAttachment {
     public static final int denominator = 100;
     int offset;
     Component component;
-    
+
     public FormAttachment(int numerator, int offset) {
         this.numerator = numerator;
         this.offset = offset;
@@ -42,5 +42,11 @@ public final class FormAttachment {
 
     int solveY(int value) {
         return (value - offset) * denominator / numerator;
+    }
+
+    @Override
+    public String toString() {
+        return "FormAttachment [numerator=" + numerator + ", offset=" + offset
+                + ", component=" + (component == null ? component : component.getName()) + "]";
     }
 }
