@@ -1,10 +1,32 @@
-<xml>
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE formlayout SYSTEM "src/ez/layout/formlayout/xml/formlayout.dtd">
+<formlayout>
   <panel id="panel" margin="10">
-    <component id="topLeft" type="JButton" layoutdata="top:left"/>
-    <component id="topLeftBottom" type="JButton" layoutdata="top topLeft"/>
-    <component id="topLeftBottomRight" type="JButton" layoutdata="left topLeftBottom"/>
-    <component id="topRight" type="JButton" layoutdata="top:right"/>
-    <component id="bottomRight" type="JButton" layoutdata="right:bottom"/>
-    <component id="bottomRightTop" type="JButton" layoutdata="bottom bottomRight"/>
+    <component id="topLeft" text="text1" type="JButton">
+      <top />
+      <left />
+    </component>
+    <component id="topLeftBottom" type="JTextField">
+      <top component="topLeft" />
+    </component>
+    <component id="topLeftBottomRight" type="JButton">
+      <left component="topLeftBottom" />
+    </component>
+    <component id="topRight" type="JButton">
+      <top />
+      <right />
+    </component>
+    <component id="bottomRight" type="JButton">
+      <bottom />
+      <right />
+    </component>
+    <component id="bottomRightTop" type="JButton">
+      <bottom component="bottomRight" />
+    </component>
+    <component id="leftRight" type="JTextArea">
+      <bottom component="bottomRightTop" />
+      <left />
+      <right />
+    </component>
   </panel>
-</xml>
+</formlayout>

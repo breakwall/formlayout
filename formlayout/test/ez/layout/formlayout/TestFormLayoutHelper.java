@@ -5,6 +5,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import ez.layout.formlayout.core.FormLayout;
+import ez.layout.formlayout.core.FormLayoutHelper;
+
 public class TestFormLayoutHelper {
     public static void main(String[] args) {
         JFrame frame = new JFrame("test FormLayoutHelper");

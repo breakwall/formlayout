@@ -1,4 +1,4 @@
-package ez.layout.formlayout;
+package ez.layout.formlayout.core;
 
 import java.awt.Component;
 import java.io.File;
@@ -211,30 +211,5 @@ public class FormLayoutHelper {
         for (Entry<Component, FormData> entry : components.entrySet()) {
             panel.add(entry.getKey(), entry.getValue());
         }
-    }
-
-    public static Map<String, XMLLayout> readFromFile(String fileName) {
-        Map<String, XMLLayout> map = new HashMap<>();
-        try {
-            File file = new File(fileName);
-            FileInputStream fis = new FileInputStream(file);
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document document = builder.parse(fis);
-
-            Element element = document.getDocumentElement();
-            NodeList panels = element.getElementsByTagName("panel");
-            for (int i = 0; i < panels.getLength(); i++) {
-                Element ele = (Element) panels.item(i);
-                XMLLayout panel = new XMLLayout();
-                panel.parseElement(ele);
-                map.put(panel.getId(), panel);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return map;
     }
 }

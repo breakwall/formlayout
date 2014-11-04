@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ez.layout.formlayout;
+package ez.layout.formlayout.core;
 
 import java.awt.Component;
 import java.awt.Container;
