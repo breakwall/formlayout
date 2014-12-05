@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!ELEMENT formlayout (panel+) >
+
 <!ELEMENT panel (component+) >
+
 <!ELEMENT component (top?,bottom?,left?,right?) >
+
 <!ELEMENT top EMPTY >
+
 <!ELEMENT bottom EMPTY >
+
 <!ELEMENT left EMPTY >
+
 <!ELEMENT right EMPTY >
+
 <!ATTLIST panel
 id ID #REQUIRED
 margin CDATA #IMPLIED>

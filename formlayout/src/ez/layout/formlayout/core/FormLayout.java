@@ -18,6 +18,12 @@ import java.util.Map;
  */
 public final class FormLayout implements LayoutManager2 {
 
+    public static final int DEFAULT_MARGIN = 0;
+    public static final int DEFAULT_PADDING = 0;
+
+    public int margin = DEFAULT_MARGIN;
+    public int padding = DEFAULT_PADDING;
+
     private final Map<Component, FormData> componentConstraints = new HashMap<>();
 
     @Override
@@ -49,6 +55,7 @@ public final class FormLayout implements LayoutManager2 {
 
     @Override
     public void invalidateLayout(Container target) {
+        // do nothing
     }
 
     @Override
@@ -91,8 +98,9 @@ public final class FormLayout implements LayoutManager2 {
                 width = x2 - x;
                 height = y2 - y;
 //                System.out.println(comp.getClass().getName() + ":(" + x + "," + y + "),(" + x2 + "," + y2 + ")");
-//                System.out.println(width + ":"+ height);
-//                System.out.println(w + ":" + h);
+                System.out.println(width + ":"+ height);
+                System.out.println(w + ":" + h);
+                System.out.println("=========");
                 comp.setBounds(x, y, width, height);
             }
         }

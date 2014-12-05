@@ -83,8 +83,7 @@ public class FormLayoutHelper {
      * @param position
      *            relative position
      */
-    public void addComponent(Component component, Component dComponent,
-            int position) {
+    public void addComponent(Component component, int position, Component dComponent) {
         if (!components.containsKey(dComponent)) {
             throw new IllegalArgumentException(
                     "The given dComponent has never been added before!");
@@ -115,10 +114,6 @@ public class FormLayoutHelper {
     }
 
     public void addComponent(Component component, Object topData,  Object bottomData,  Object leftData,  Object rightData) {
-//        if ((topData == null && bottomData == null) || (leftData == null && rightData == null)) {
-//            throw new IllegalArgumentException("layout data is invalid.");
-//        }
-
         FormData fd = new FormData();
 
         if (topData != null) {
@@ -204,7 +199,7 @@ public class FormLayoutHelper {
                     "No related component, you should add a component to list fist");
         }
 
-        addComponent(component, lastComponent, position);
+        addComponent(component, position, lastComponent);
     }
 
     public void fillPanel(JPanel panel) {
