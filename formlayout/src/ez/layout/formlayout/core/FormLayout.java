@@ -12,16 +12,15 @@ import java.awt.LayoutManager2;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JButton;
+
 /**
  *
  * @author Justis.Ren
  */
 public final class FormLayout implements LayoutManager2 {
 
-    public static final int DEFAULT_MARGIN = 0;
     public static final int DEFAULT_PADDING = 0;
-
-    public int margin = DEFAULT_MARGIN;
     public int padding = DEFAULT_PADDING;
 
     private final Map<Component, FormData> componentConstraints = new HashMap<>();
@@ -83,10 +82,10 @@ public final class FormLayout implements LayoutManager2 {
                     continue;
                 }
 
-                final FormAttachment left = formData.getLeftAttachment(this, comp);
-                final FormAttachment right = formData.getRightAttachment(this, comp);
-                final FormAttachment top = formData.getTopAttachment(this, comp);
-                final FormAttachment bottom = formData.getBottomAttachment(this, comp);
+                final FormAttachment left = formData.getLeftAttachment(this, comp, padding);
+                final FormAttachment right = formData.getRightAttachment(this, comp, padding);
+                final FormAttachment top = formData.getTopAttachment(this, comp, padding);
+                final FormAttachment bottom = formData.getBottomAttachment(this, comp, padding);
 
                 final int x = left.solveX(w);     // x coordinate of left
                 final int y = top.solveX(h);     // y coordinate of top
@@ -98,9 +97,9 @@ public final class FormLayout implements LayoutManager2 {
                 width = x2 - x;
                 height = y2 - y;
 //                System.out.println(comp.getClass().getName() + ":(" + x + "," + y + "),(" + x2 + "," + y2 + ")");
-                System.out.println(width + ":"+ height);
-                System.out.println(w + ":" + h);
-                System.out.println("=========");
+                System.out.println("=========layout container");
+                System.out.println("comp:"+ ((JButton)comp).getText());
+                System.out.println("x:" + x + ", y:" + y + " ,width:" + width + ", height:"+ height);
                 comp.setBounds(x, y, width, height);
             }
         }
@@ -117,7 +116,7 @@ public final class FormLayout implements LayoutManager2 {
         int height = 0;
         for(Component c: parent.getComponents()) {
             FormData fd = componentConstraints.get(c);
-            Dimension d = fd.getMinimumSize(this, c);
+            Dimension d = fd.getMinimumSize(this, c, padding);
             if (width < d.width) {
                 width = d.width;
             }

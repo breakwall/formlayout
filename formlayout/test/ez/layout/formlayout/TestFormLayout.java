@@ -12,7 +12,9 @@ import ez.layout.formlayout.core.FormLayout;
 public class TestFormLayout {
     public static void main(String[] args) {
         JFrame frame = new JFrame("test Java Swing form layout (SWT formlayout like)");
-        JPanel panel = new JPanel(new FormLayout());
+        FormLayout formLayout = new FormLayout();
+        formLayout.padding = 10;
+        JPanel panel = new JPanel(formLayout);
         frame.setContentPane(panel);
 
         JButton button1 = new JButton("top left 1");
