@@ -21,6 +21,8 @@ import javax.swing.JButton;
 public final class FormLayout implements LayoutManager2 {
 
     public static final int DEFAULT_PADDING = 0;
+    public static final int DEFAULT_MARGIN = 0;
+    public int margin = DEFAULT_MARGIN;
     public int padding = DEFAULT_PADDING;
 
     private final Map<Component, FormData> componentConstraints = new HashMap<>();
@@ -73,34 +75,30 @@ public final class FormLayout implements LayoutManager2 {
     @Override
     public void layoutContainer(Container parent) {
         synchronized (parent.getTreeLock()) {
-            final int w = parent.getWidth();
-            final int h = parent.getHeight();
-            final Component[] components = parent.getComponents();
-            for (final Component comp : components) {
-                final FormData formData = componentConstraints.get(comp);
+            int w = Math.max(parent.getWidth() - margin * 2, 0);
+            int h = Math.max(parent.getHeight() - margin * 2, 0);
+            Component[] components = parent.getComponents();
+            for (Component comp : components) {
+                FormData formData = componentConstraints.get(comp);
                 if (formData == null) {
                     continue;
                 }
 
-                final FormAttachment left = formData.getLeftAttachment(this, comp, padding);
-                final FormAttachment right = formData.getRightAttachment(this, comp, padding);
-                final FormAttachment top = formData.getTopAttachment(this, comp, padding);
-                final FormAttachment bottom = formData.getBottomAttachment(this, comp, padding);
+                FormAttachment left = formData.getLeftAttachment(this, comp, padding);
+                FormAttachment right = formData.getRightAttachment(this, comp, padding);
+                FormAttachment top = formData.getTopAttachment(this, comp, padding);
+                FormAttachment bottom = formData.getBottomAttachment(this, comp, padding);
 
-                final int x = left.solveX(w);     // x coordinate of left
-                final int y = top.solveX(h);     // y coordinate of top
-
-                final int width;
-                final int height;
-                final int x2 = right.solveX(w);          // x coordinate of right
-                final int y2 = bottom.solveX(h);   // y coordinate of bottom
-                width = x2 - x;
-                height = y2 - y;
-//                System.out.println(comp.getClass().getName() + ":(" + x + "," + y + "),(" + x2 + "," + y2 + ")");
-                System.out.println("=========layout container");
-                System.out.println("comp:"+ ((JButton)comp).getText());
-                System.out.println("x:" + x + ", y:" + y + " ,width:" + width + ", height:"+ height);
-                comp.setBounds(x, y, width, height);
+                int x = left.solveX(w);     // x coordinate of left
+                int y = top.solveX(h);     // y coordinate of top
+                int x2 = right.solveX(w);          // x coordinate of right
+                int y2 = bottom.solveX(h);   // y coordinate of bottom
+                int width = x2 - x;
+                int height = y2 - y;
+//                System.out.println("=========layout container");
+//                System.out.println("comp:"+ ((JButton)comp).getText());
+//                System.out.println("x:" + x + ", y:" + y + " ,width:" + width + ", height:"+ height);
+                comp.setBounds(x + margin, y + margin, width, height);
             }
         }
     }

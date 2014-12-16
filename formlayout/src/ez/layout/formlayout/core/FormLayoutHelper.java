@@ -1,21 +1,10 @@
 package ez.layout.formlayout.core;
 
 import java.awt.Component;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class FormLayoutHelper {
 
@@ -26,18 +15,6 @@ public class FormLayoutHelper {
     public static final int RIGHT = 3;
 
     public static final int BOTTOM = 4;
-
-    public static final int DEFAULT_MARGIN = 10;
-
-    private final int margin;
-
-    public FormLayoutHelper() {
-        this(DEFAULT_MARGIN);
-    }
-
-    public FormLayoutHelper(int margin) {
-        this.margin = margin;
-    }
 
     private LinkedHashMap<Component, FormData> components = new LinkedHashMap<Component, FormData>();
     private Component lastComponent = null;
@@ -118,9 +95,9 @@ public class FormLayoutHelper {
 
         if (topData != null) {
             if (topData.equals(TOP)) {
-                fd.top = new FormAttachment(0, margin);
+                fd.top = new FormAttachment(0);
             } else if ((topData instanceof Component) && components.containsKey(topData)) {
-                fd.top = new FormAttachment((Component)topData, margin);
+                fd.top = new FormAttachment((Component)topData);
             } else if (topData instanceof FormAttachment) {
                 fd.top = (FormAttachment)topData;
             }
@@ -128,9 +105,9 @@ public class FormLayoutHelper {
 
         if (bottomData != null) {
             if (bottomData.equals(BOTTOM)) {
-                fd.bottom = new FormAttachment(100, -margin);
+                fd.bottom = new FormAttachment(100);
             } else if ((bottomData instanceof Component) && components.containsKey(bottomData)) {
-                fd.bottom = new FormAttachment((Component)bottomData, -margin);
+                fd.bottom = new FormAttachment((Component)bottomData);
             } else if (bottomData instanceof FormAttachment) {
                 fd.bottom = (FormAttachment)bottomData;
             }
@@ -138,9 +115,9 @@ public class FormLayoutHelper {
 
         if (leftData != null) {
             if (leftData.equals(LEFT)) {
-                fd.left = new FormAttachment(0, margin);
+                fd.left = new FormAttachment(0);
             } else if ((leftData instanceof Component) && components.containsKey(leftData)) {
-                fd.left = new FormAttachment((Component)leftData, margin);
+                fd.left = new FormAttachment((Component)leftData);
             } else if (leftData instanceof FormAttachment) {
                 fd.left = (FormAttachment)leftData;
             }
@@ -148,9 +125,9 @@ public class FormLayoutHelper {
 
         if (rightData != null) {
             if (rightData.equals(RIGHT)) {
-                fd.right = new FormAttachment(100, -margin);
+                fd.right = new FormAttachment(100);
             } else if ((rightData instanceof Component) && components.containsKey(rightData)) {
-                fd.right = new FormAttachment((Component)rightData, -margin);
+                fd.right = new FormAttachment((Component)rightData);
             } else if (rightData instanceof FormAttachment) {
                 fd.right = (FormAttachment)rightData;
             }

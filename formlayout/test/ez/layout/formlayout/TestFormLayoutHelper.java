@@ -11,7 +11,9 @@ import ez.layout.formlayout.core.FormLayoutHelper;
 public class TestFormLayoutHelper {
     public static void main(String[] args) {
         JFrame frame = new JFrame("test FormLayoutHelper");
-        JPanel panel = new JPanel(new FormLayout());
+        FormLayout formLayout = new FormLayout();
+        formLayout.margin = 10;
+        JPanel panel = new JPanel(formLayout);
         frame.setContentPane(panel);
 
         FormLayoutHelper helper = new FormLayoutHelper();

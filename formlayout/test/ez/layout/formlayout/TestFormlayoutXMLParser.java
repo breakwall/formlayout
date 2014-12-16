@@ -11,7 +11,7 @@ import ez.layout.formlayout.xml.XMLParser;
 public class TestFormlayoutXMLParser {
     public static void main(String[] args) {
         JFrame frame = new JFrame("test swing form layout (using XML to create layout)");
-        JPanel panel = new JPanel(new FormLayout());
+        JPanel panel = new JPanel();
         frame.setContentPane(panel);
 
         XMLParser xmlParser = new XMLParser("test/ez/layout/formlayout/formlayout.xml");

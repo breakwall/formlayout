@@ -14,20 +14,21 @@ import javax.swing.JTextField;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import ez.layout.formlayout.core.FormLayout;
 import ez.layout.formlayout.core.FormLayoutHelper;
 
 public class XMLLayout {
     private String id;
+    private int margin;
     private FormLayoutHelper helper;
     private Map<String, Component> componentsIdMap = new HashMap<>();
     private Map<String, XMLLayoutData> componentsLayoutMap = new LinkedHashMap<>();
 
     public void parseElement(Element element) {
         this.id = element.getAttribute("id");
-        String margin = element.getAttribute("margin");
-        // check if margin is integer
-        int marginInt = Integer.parseInt(margin);
-        this.helper = new FormLayoutHelper(marginInt);
+        String marginStr = element.getAttribute("margin");
+        margin = Integer.parseInt(marginStr);
+        this.helper = new FormLayoutHelper();
 
         NodeList components = element.getElementsByTagName("component");
         for (int i = 0; i < components.getLength(); i++) {
@@ -152,6 +153,10 @@ public class XMLLayout {
     }
 
     public void fillPanel(JPanel panel) {
+        FormLayout formLayout = new FormLayout();
+        formLayout.margin = margin;
+        panel.setLayout(formLayout);
+
         if (!isAllComponentsCreated()) {
             createComponents(this.componentsIdMap);
         }

@@ -18,9 +18,17 @@ public final class FormAttachment {
     int offset;
     Component component;
 
+    public FormAttachment(int numerator) {
+        this(numerator, 0);
+    }
+
     public FormAttachment(int numerator, int offset) {
         this.numerator = numerator;
         this.offset = offset;
+    }
+
+    public FormAttachment(Component component) {
+        this(component, 0);
     }
 
     public FormAttachment(Component component, int offset) {

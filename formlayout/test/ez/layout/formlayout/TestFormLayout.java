@@ -13,7 +13,8 @@ public class TestFormLayout {
     public static void main(String[] args) {
         JFrame frame = new JFrame("test Java Swing form layout (SWT formlayout like)");
         FormLayout formLayout = new FormLayout();
-        formLayout.padding = 10;
+        formLayout.margin = 10;
+//        formLayout.padding = 10;
         JPanel panel = new JPanel(formLayout);
         frame.setContentPane(panel);
 
